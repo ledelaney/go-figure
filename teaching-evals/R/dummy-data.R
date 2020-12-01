@@ -34,7 +34,7 @@ theme_niwot <- function(){
 
 ### Get some mostly normally distributed data 
 
-scores <- rnorm(n = 250, mean = 2.5, sd = 1) %>%
+scores <- rnorm(n = 250, mean = 3, sd = 1) %>%
   enframe(name = NULL, value = "scores") %>%
   mutate(semester = rep("semester", 250)) %>%
   filter(scores > 1 & scores <= 5)
