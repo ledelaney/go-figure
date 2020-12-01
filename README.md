@@ -3,3 +3,4 @@
 
 ## Resources
 + https://ourcodingclub.github.io/tutorials/dataviz-beautification/
++ http://vita.had.co.nz/papers/boxplots.pdf
