@@ -44,8 +44,13 @@ theme_niwot <- function(){
 
 make.class.data <- function(myoverall, myquestions, myexplain, n, name){
   
-  # Overall rating
+  # For each of the three componenets
+  ## 1. Multiply the number of respondants (n) by the percentage that selected the score 
+  ####### (say 50% of 100 students score a 5 -- that's 50 5s)
+  ## 2. Repeat this for each component
+  ## 3. Final dataframe has three columns of raw selections, plus a semester identifier
   
+  # Overall rating
   x <- rep(myoverall[1,1], round(myoverall[1,2]*n)) %>%
     enframe(name = NULL, value = "score")
   
@@ -65,7 +70,6 @@ make.class.data <- function(myoverall, myquestions, myexplain, n, name){
     setNames(., "overall") 
   
   # Answer questions rating
-  
   x <- rep(myquestions[1,1], round(myquestions[1,2]*n)) %>%
     enframe(name = NULL, value = "score")
   
@@ -85,7 +89,6 @@ make.class.data <- function(myoverall, myquestions, myexplain, n, name){
     setNames(., "questions")
   
   # Explain rating
-  
   x <- rep(myexplain[1,1], round(myexplain[1,2]*n)) %>%
     enframe(name = NULL, value = "score")
   
@@ -344,16 +347,16 @@ rm(overall, explain, questions, perc, score)
 
 
 # Bind all averages together for plotting averages..
-
 alldata <- bind_rows(fa.2016, sp.2017, fa.2017, sp.2018, su.2018, 
                   fa.2018, sp.2019, su.2019, fa.2019, sp.2020, su.2020) %>%
+  # Make factors with appropriate order
   mutate(semester = factor(semester, levels = c("fall2016", "spring2017", 
                                                  "fall2017", "spring2018", 
                                                  "summ2018", "fall2018", "spring2019", 
                                                  "summ2019", "fall2019", "spring2020", "summ2020")))
 
 
-# Take average across three components for composite score
+# Take average across three components (columns) for composite score
 avgs <- alldata %>%
   rowwise() %>%
   mutate(avg = mean(questions:explain)) %>%
@@ -400,7 +403,8 @@ ggplot(data = avgs, aes(x = avg, y = 1)) +
   facet_grid(. ~ semester) +
   coord_flip() +
   theme_niwot() +
-  theme(axis.text.x = element_blank()) +
+  theme(axis.text.x = element_blank(), 
+        axis.line.x = element_blank(), axis.ticks = element_blank()) +
   labs(title = "Summary of Teaching Evaluation Scores") +
   ylab("") + xlab("Overall Average")
 
