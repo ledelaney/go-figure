@@ -357,6 +357,11 @@ alldata <- bind_rows(fa.2016, sp.2017, fa.2017, sp.2018, su.2018,
 
 
 # Take average across three components (columns) for composite score
+## This approach is slightly problematic as the scores are ordered from
+## high to low. This means if a student gave me a 4 in overall rating, but a 2
+## in the other categories, this would not be reflected. 
+## This likely increases the variance slightly for some scores, but is still
+## a close approximation of composite rating (matches overall TA rating well)
 avgs <- alldata %>%
   rowwise() %>%
   mutate(avg = mean(questions:explain)) %>%
@@ -406,7 +411,7 @@ ggplot(data = avgs, aes(x = avg, y = 1)) +
   theme(axis.text.x = element_blank(), 
         axis.line.x = element_blank(), axis.ticks = element_blank()) +
   labs(title = "Summary of Teaching Evaluation Scores") +
-  ylab("") + xlab("Overall Average")
+  ylab("") + xlab("Composite Rating")
 
 dev.off()
 
